@@ -25,7 +25,7 @@
 ### Задание 1
 
 <img width="1358" height="905" alt="3" src="https://github.com/user-attachments/assets/1f1c9b72-ae3e-467c-a57d-4121f255a379" />
-[1.pkt](https://drive.google.com/file/d/13DOm2KZjFuGmtFgFLAqdOosz4WbtibcF/view?usp=sharing)
+[pkt](https://drive.google.com/file/d/13DOm2KZjFuGmtFgFLAqdOosz4WbtibcF/view?usp=sharing)
 
 
 ---
