@@ -117,6 +117,7 @@ vrrp_instance VI_1 {
 
 <img width="2567" height="908" alt="6" src="https://github.com/user-attachments/assets/7a7cdd06-8fcc-4d05-bd42-dff90c366aa1" />
 
+<img width="2559" height="1221" alt="7" src="https://github.com/user-attachments/assets/97d401ed-ec34-4f65-bf92-7057b93b27ae" />
 
 
 ---
