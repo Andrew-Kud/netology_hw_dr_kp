@@ -124,44 +124,67 @@ vrrp_instance VI_1 {
 
 ### Задание 3
 
-`Приведите ответ в свободной форме........`
-
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
-
+keepalived.conf
 ```
-Поле для вставки кода...
-....
-....
-....
-....
-```
+global_defs {
+    enable_script_security
+}
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
+vrrp_script check_priority {
+    script "/usr/local/bin/check_priority.sh"
+    interval 3
+    weight 100
+    user root
+}
 
-### Задание 4
+vrrp_instance VI_1 {
+    state BACKUP
+    interface enp0s3
+    virtual_router_id 15
+    priority 200
+    advert_int 1
 
-`Приведите ответ в свободной форме........`
+    virtual_ipaddress {
+        192.168.10.15/24
+    }
 
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
-
-```
-Поле для вставки кода...
-....
-....
-....
-....
+    track_script {
+        check_priority
+    }
+}
 ```
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота](ссылка на скриншот)`
+Скрипт проверки загруженности CPU /usr/local/bin/update-priority.sh (он же добавляется в cron):
+```
+#!/bin/bash
+
+LOAD=$(cat /proc/loadavg | awk '{print $1}')
+PRIORITY=$(awk "BEGIN { p = 200 - ($LOAD * 25); if (p < 100) p = 100; if (p > 200) p = 200; print int(p) }")
+echo $PRIORITY > /tmp/keepalived_priority
+```
+
+Скрипт проверки приоритета = CPU:
+```
+#!/bin/bash
+
+PRIORITY_FILE="/tmp/keepalived_priority"
+CURRENT_PRIORITY=$(cat "$PRIORITY_FILE" 2>/dev/null || echo 150)
+THRESHOLD=180
+
+if [ "$CURRENT_PRIORITY" -lt "$THRESHOLD" ]; then
+    exit 1
+else
+    exit 0
+fi
+```
+
+<img width="2560" height="1440" alt="7" src="https://github.com/user-attachments/assets/fd0e52c2-0e06-42fe-aa99-4c447ecf7c5c" />
+
+<img width="2559" height="1439" alt="8" src="https://github.com/user-attachments/assets/4b6e991e-1667-42c6-982a-13f9da403c81" />
+
+<img width="2558" height="1439" alt="9" src="https://github.com/user-attachments/assets/b60a5efe-2166-4595-8c1f-b8d63929d1df" />
+
+
+
+---
+
