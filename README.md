@@ -25,32 +25,98 @@
 ### Задание 1
 
 <img width="1358" height="905" alt="3" src="https://github.com/user-attachments/assets/1f1c9b72-ae3e-467c-a57d-4121f255a379" />
-[pkt](https://drive.google.com/file/d/13DOm2KZjFuGmtFgFLAqdOosz4WbtibcF/view?usp=sharing)
+ [1.pkt](https://drive.google.com/file/d/13DOm2KZjFuGmtFgFLAqdOosz4WbtibcF/view?usp=sharing)
 
 
 ---
 
 ### Задание 2
 
-`Приведите ответ в свободной форме........`
-
-1. `Заполните здесь этапы выполнения, если требуется ....`
-2. `Заполните здесь этапы выполнения, если требуется ....`
-3. `Заполните здесь этапы выполнения, если требуется ....`
-4. `Заполните здесь этапы выполнения, если требуется ....`
-5. `Заполните здесь этапы выполнения, если требуется ....`
-6. 
-
+Скрипт bash:
 ```
-Поле для вставки кода...
-....
-....
-....
-....
+#!/bin/bash
+
+
+PORT=80
+FILE="/var/www/html/index.nginx-debian.html"
+
+
+if timeout 1 bash -c ":</dev/tcp/localhost/$PORT" 2>/dev/null && [ -f "$FILE" ]; then
+    exit 0
+else
+    exit 1
+fi
 ```
 
-`При необходимости прикрепитe сюда скриншоты
-![Название скриншота 2](ссылка на скриншот 2)`
+Кофиг-файл Мастера:
+```
+global_defs {
+        enable_script_security
+}
+
+
+vrrp_script check_port {
+        script "/usr/local/bin/check1.sh"
+        interval 3
+        weight 100
+        user root
+}
+
+
+vrrp_instance VI_1 {
+        state BACKUP
+        interface enp0s3
+        virtual_router_id 15
+        priority 210
+        advert_int 1
+
+        virtual_ipaddress {
+              192.168.10.15/24
+        }
+
+        track_script {
+                check_port
+        }
+}
+```
+
+Конфиг-файл Бэкапа:
+```
+global_defs {
+        enable_script_security
+}
+
+
+vrrp_script check_port {
+        script "/usr/local/bin/check1.sh"
+        interval 3
+        weight 100
+        user root
+}
+
+
+vrrp_instance VI_1 {
+        state BACKUP
+        interface enp0s3
+        virtual_router_id 15
+        priority 200
+        advert_int 1
+
+        virtual_ipaddress {
+              192.168.10.15/24
+        }
+
+        track_script {
+                check_port
+        }
+}
+```
+<img width="2563" height="563" alt="4" src="https://github.com/user-attachments/assets/3f2418e5-2f75-4543-a3d7-2c56b5a8046d" />
+
+<img width="2561" height="698" alt="5" src="https://github.com/user-attachments/assets/a0bcda1b-af73-426f-b55c-00d24cc9eb25" />
+
+<img width="2567" height="908" alt="6" src="https://github.com/user-attachments/assets/7a7cdd06-8fcc-4d05-bd42-dff90c366aa1" />
+
 
 
 ---
